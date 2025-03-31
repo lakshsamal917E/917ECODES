@@ -27,7 +27,7 @@ pros::adi::DigitalOut pneumaticmech('A');
 //Horizontal Drift will learn later
 lemlib::Drivetrain drivetrain(&left_motors, // left motor group
 	&right_motors, // right motor group
-	13.5, // 10 inch track width
+	13.25, // 10 inch track width
 	lemlib::Omniwheel::NEW_325, // using new 4" omnis
 	450, // drivetrain rpm is 360
 	2 // horizontal drift is 2 (for now)
