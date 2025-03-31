@@ -147,7 +147,7 @@ void intakemechanism() {
 // Pneumatics Function
 void pneumaticsstuff() {
 	while (true) {
-		if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) { 
+		if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) { 
 			PneumaticsDown = !PneumaticsDown; //Togles Piston
 			pneumaticmech.set_value(PneumaticsDown);//Sets Piston correct value
 		} 
