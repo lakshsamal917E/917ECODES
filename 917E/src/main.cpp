@@ -9,7 +9,7 @@
 //Defining Boolean For pneumatics
 bool PneumaticsDown = false;
 
-// Creatin Controller
+// Creating Controller
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 //Setting up Drive Train Motors
@@ -140,7 +140,6 @@ void intakemechanism() {
 			intake.move_velocity(0); // If these buttons aren't being pressed then it like stops
 		}
 		pros::delay(20);
-
 	}
 }
 
@@ -152,9 +151,7 @@ void pneumaticsstuff() {
 			pneumaticmech.set_value(PneumaticsDown);//Sets Piston correct value
 		} 
 		pros::delay(20);
-
 	}
-
 }
 
 void opcontrol() {
@@ -164,6 +161,6 @@ void opcontrol() {
 		int lefty = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y); // Moving Forward & Backward
 		int rightx = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X); //Turning
 		chassis.arcade(lefty, rightx); // Tells robot to move
-		pros::delay(20); //Prevents freezing
+		pros::delay(20); //Prevents freezing (very important to code)
 	}
 }
