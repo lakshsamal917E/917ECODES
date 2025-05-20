@@ -48,26 +48,26 @@ lemlib::OdomSensors sensors(nullptr, // vertical tracking wheel 1, set to null
 );
 
 // lateral PID controller
-lemlib::ControllerSettings lateral_controller(10, // proportional gain (kP)
+lemlib::ControllerSettings lateral_controller(10, // proportional gain (kP) If the robot doesn't reach how far you want it to go make kP higher by 0.1 and vice versa.
                                               0, // integral gain (kI)
-                                              3, // derivative gain (kD)
-                                              3, // anti wirndup
-                                              1, // small eror range, in inches
-                                              100, // small error range timeout, in milliseconds
-                                              3, // large error range, in inches
-                                              500, // large error range timeout, in milliseconds
-                                              20 // maximum acceleration (slew)
+                                              3, // derivative gain (kD) Change is the robot goes too far and then adjusts itself to reach a point increase by 0.1 and vice versa.
+                                              0, // anti wirndup
+                                              0, // small eror range, in inches
+                                              0, // small error range timeout, in milliseconds
+                                              0, // large error range, in inches
+                                              0, // large error range timeout, in milliseconds
+                                              0 // maximum acceleration (slew)
 );
 
 // angular PID controller
-lemlib::ControllerSettings angular_controller(2, // proportional gain (kP)
-                                              0, // integral gain (kI)
+lemlib::ControllerSettings angular_controller(2, // proportional gain (kP) If the robot doesn't reach the point you want to go to make kP higher by 0.1 and vice versa.
+                                              0, // integral gain (kI) If the robot doesn't reach the point you want it to go immediately and then adjusts it self to reach that pointthen increase by 0.1 and vice versa.
                                               10, // derivative gain (kD)
-                                              3, // anti windup
-                                              1, // small error range, in degrees
-                                              100, // small error range timeout, in milliseconds
-                                              3, // large error range, in degrees
-                                              500, // large error range timeout, in milliseconds
+                                              0, // anti windup
+                                              0, // small error range, in degrees
+                                              0, // small error range timeout, in milliseconds
+                                              0, // large error range, in degrees
+                                              0, // large error range timeout, in milliseconds
                                               0 // maximum acceleration (slew)
 );
 
