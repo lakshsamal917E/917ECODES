@@ -7,7 +7,8 @@
 #include "pros/rtos.hpp"
  
 //Defining Boolean For pneumatics
-bool PneumaticsDown = false;
+bool PneumaticPiston1 = false;
+bool PneumaticPiston2 = false;
 
 // Creatin Controller
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
@@ -17,9 +18,11 @@ pros::MotorGroup left_motors({1, 2, 3}, pros::MotorGearset::blue);
 pros::MotorGroup right_motors({4, 5, 6}, pros::MotorGearset::blue);
 //Mechanism Motors
 pros::Motor intake(7, pros::MotorGearset::blue);
+pros::Motor intake2(8, pros::MotorGearset::blue);
 
 //Pneumatics System (Has to be single quotes when calling it)
 pros::adi::DigitalOut pneumaticmech('A');
+pros::adi::DigitalOut pneumaticmech2('B');
 // DriveTrain 
 //Track Width is the distance between the center of the left wheel and center of the right wheel
 //Wheel Diameter is the length of our wheels
@@ -29,11 +32,11 @@ lemlib::Drivetrain drivetrain(&left_motors, // left motor group
 	&right_motors, // right motor group
 	13.25, // 10 inch track width
 	lemlib::Omniwheel::NEW_325, // using new 4" omnis
-	450, // drivetrain rpm is 360
+	450, // drivetrain rpm is 450
 	2 // horizontal drift is 2 (for now)
 
 );
-//ODOMETRY CODE
+//ODOMETRY CODE (reyansh will teach me about later`)
 pros::Imu imu(10);
 
 lemlib::OdomSensors sensors(nullptr, // vertical tracking wheel 1, set to null
@@ -96,7 +99,7 @@ void disabled() {}
  * Management System or the VEX Competition Switch. This is intended for
  * competition-specific initialization routines, such as an autonomous selector
  * on the LCD.
- *
+ * 
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
@@ -134,10 +137,13 @@ void intakemechanism() {
 	while (true) {
 		if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { //Outtakes thy intake
 			intake.move_velocity(600);
+			intake2.move_velocity(600);
 		}else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { //Intake thy intake
 			intake.move_velocity(-600);
+			intake2.move_velocity(-600);
 		} else {
 			intake.move_velocity(0); // If these buttons aren't being pressed then it like stops
+			intake.move_velocity(0);
 		}
 		pros::delay(20);
 
@@ -145,11 +151,13 @@ void intakemechanism() {
 }
 
 // Pneumatics Function
-void pneumaticsstuff() {
+void anglechangeofball() {
 	while (true) {
 		if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) { 
-			PneumaticsDown = !PneumaticsDown; //Togles Piston
-			pneumaticmech.set_value(PneumaticsDown);//Sets Piston correct value
+			PneumaticPiston1 = !PneumaticPiston1; //Togles one of the pistons and puts a piece of poly carb down to change the angle of the game object
+			pneumaticmech.set_value(PneumaticPiston1);//Sets Piston correct value
+			PneumaticPiston2 = !PneumaticPiston2; //toggles another one of the piston that is at
+			pneumaticmech2.set_value(PneumaticPiston2); //Sets Piston correct value 
 		} 
 		pros::delay(20);
 
@@ -159,7 +167,7 @@ void pneumaticsstuff() {
 
 void opcontrol() {
 	pros::Task Intake_Task (intakemechanism); // Calls Intake Funciton
-	pros::Task Pneumatics_Task (pneumaticsstuff); //Calls Pneumatics Function
+	pros::Task Pneumatics_Task (anglechangeofball); //Calls Pneumatics Function
 	while (true) {
 		int lefty = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y); // Moving Forward & Backward
 		int rightx = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X); //Turning
