@@ -10,7 +10,7 @@
 bool PneumaticPiston1 = false;
 bool PneumaticPiston2 = false;
 
-// Creatin Controller
+// Creating Controller
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 //Setting up Drive Train Motors
@@ -30,7 +30,7 @@ pros::adi::DigitalOut pneumaticmech2('B');
 //Horizontal Drift will learn later
 lemlib::Drivetrain drivetrain(&left_motors, // left motor group
 	&right_motors, // right motor group
-	13.25, // 10 inch track width
+	11.5, // 11.5 inch track width
 	lemlib::Omniwheel::NEW_325, // using new 4" omnis
 	450, // drivetrain rpm is 450
 	2 // horizontal drift is 2 (for now)
@@ -38,6 +38,7 @@ lemlib::Drivetrain drivetrain(&left_motors, // left motor group
 );
 //ODOMETRY CODE (reyansh will teach me about later`)
 pros::Imu imu(10);
+
 
 lemlib::OdomSensors sensors(nullptr, // vertical tracking wheel 1, set to null
                             nullptr, // vertical tracking wheel 2, set to nullptr as we are using IMEs
@@ -50,8 +51,8 @@ lemlib::OdomSensors sensors(nullptr, // vertical tracking wheel 1, set to null
 lemlib::ControllerSettings lateral_controller(10, // proportional gain (kP)
                                               0, // integral gain (kI)
                                               3, // derivative gain (kD)
-                                              3, // anti windup
-                                              1, // small error range, in inches
+                                              3, // anti wirndup
+                                              1, // small eror range, in inches
                                               100, // small error range timeout, in milliseconds
                                               3, // large error range, in inches
                                               500, // large error range timeout, in milliseconds
@@ -116,7 +117,14 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {}
+void autonomous() {
+	chassis.setPose(-140, 59,270);
+	chassis.moveToPoint(-61, 60, 1500);
+	pneumaticmech.set_value(true);
+	intake.move_velocity(600);
+	chassis.turnToHeading(0, 1500, {.maxSpeed = 80}, false);
+
+}
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -131,7 +139,7 @@ void autonomous() {}
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
-
+ 
  //Intake Function
 void intakemechanism() {
 	while (true) {
@@ -146,7 +154,6 @@ void intakemechanism() {
 			intake.move_velocity(0);
 		}
 		pros::delay(20);
-
 	}
 }
 
@@ -160,9 +167,7 @@ void anglechangeofball() {
 			pneumaticmech2.set_value(PneumaticPiston2); //Sets Piston correct value 
 		} 
 		pros::delay(20);
-
 	}
-
 }
 
 void opcontrol() {
@@ -172,6 +177,6 @@ void opcontrol() {
 		int lefty = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y); // Moving Forward & Backward
 		int rightx = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X); //Turning
 		chassis.arcade(lefty, rightx); // Tells robot to move
-		pros::delay(20); //Prevents freezing
+		pros::delay(20); //Prevents freezing (very important to code)
 	}
 }
