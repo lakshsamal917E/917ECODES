@@ -16,12 +16,12 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 //Setting up Drive Train Motors
 pros::MotorGroup left_motors({1, 2, 3}, pros::MotorGearset::blue);
 pros::MotorGroup right_motors({4, 5, 6}, pros::MotorGearset::blue);
-//Mechanism Motors
+//intake Motors  for our intake we plan to make it a two stage intake for more efficiency while color sorting.
 pros::Motor intake(7, pros::MotorGearset::blue);
-pros::Motor intake2(8, pros::MotorGearset::blue);
+pros::Motor intakesecondstage(8, pros::MotorGearset::blue);
 
 //Pneumatics System (Has to be single quotes when calling it)
-pros::adi::DigitalOut pneumaticmech('A');
+pros::adi::DigitalOut ballchange('A');
 pros::adi::DigitalOut pneumaticmech2('B');
 // DriveTrain 
 //Track Width is the distance between the center of the left wheel and center of the right wheel
@@ -120,7 +120,7 @@ void competition_initialize() {}
 void autonomous() {
 	chassis.setPose(-140, 59,270);
 	chassis.moveToPoint(-61, 60, 1500);
-	pneumaticmech.set_value(true);
+	ballchange.set_value(true);
 	intake.move_velocity(600);
 	chassis.turnToHeading(0, 1500, {.maxSpeed = 80}, false);
 
@@ -145,10 +145,10 @@ void intakemechanism() {
 	while (true) {
 		if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { //Outtakes thy intake
 			intake.move_velocity(600);
-			intake2.move_velocity(600);
+			intakesecondstage.move_velocity(600);
 		}else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { //Intake thy intake
 			intake.move_velocity(-600);
-			intake2.move_velocity(-600);
+			intakesecondstage.move_velocity(-600);
 		} else {
 			intake.move_velocity(0); // If these buttons aren't being pressed then it like stops
 			intake.move_velocity(0);
@@ -162,7 +162,7 @@ void anglechangeofball() {
 	while (true) {
 		if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) { 
 			PneumaticPiston1 = !PneumaticPiston1; //Togles one of the pistons and puts a piece of poly carb down to change the angle of the game object
-			pneumaticmech.set_value(PneumaticPiston1);//Sets Piston correct value
+			ballchange.set_value(PneumaticPiston1);//Sets Piston correct value
 			PneumaticPiston2 = !PneumaticPiston2; //toggles another one of the piston that is at
 			pneumaticmech2.set_value(PneumaticPiston2); //Sets Piston correct value 
 		} 
